@@ -28,6 +28,8 @@ gzip -d ${symlink_directory}${BASENAME}'_genomic.gff.gz'
 cd ${symlink_directory}
 ln -s ${BASENAME}'_genomic.gff' ${gffOutput}
 
-/beegfs/banque/gtdrift/pipeline/logiciels/cufflinks-2.2.1.Linux_x86_64/gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
+#/beegfs/banque/gtdrift/pipeline/logiciels/cufflinks-2.2.1.Linux_x86_64/gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
+
+gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
 
 ln -s ${BASENAME}'_genomic.gtf' ${gtfOutput}
