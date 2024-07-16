@@ -1,0 +1,8 @@
+{
+  "pathGTDriftData": "/beegfs/banque/gtdrift/data_results_per_assembly/",
+  "pathGTDriftGlobalResults": "/beegfs/banque/gtdrift/global_results/",
+  "pathGTDriftResource": "/beegfs/banque/gtdrift/pipeline/resources/",
+  "pathGTDriftScripts": "/beegfs/banque/gtdrift/pipeline/scripts/",
+  "pathGTDriftComputEnv": "/beegfs/banque/gtdrift/pipeline/computing_environments/",
+  "pathGTDriftLog": "/beegfs/banque/gtdrift/temp/log/"
+}
