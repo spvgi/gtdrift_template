@@ -22,7 +22,7 @@ rule collect_everything:
      input:
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna",genome_assembly=assembly_list),
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/protein.faa",genome_assembly=assembly_list),
-         #expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/cds_from_genomic.fna",genome_assembly=assembly_list),
+         expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/cds_from_genomic.fna",genome_assembly=assembly_list),
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/genomic.gff",genome_assembly=assembly_list)
 
 

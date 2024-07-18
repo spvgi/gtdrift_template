@@ -5,11 +5,11 @@ Ce pipeline permet de télécharger les génomes et leurs annotations étant don
 Une commande pour tester ce pipeline est :
 
 ``` bash
-snakemake collect_everything --configfile /beegfs/banque/gtdrift/pipeline/scripts/analyses/collecting_genome_annotation/config.json  --use-singularity --singularity-args "--bind /beegfs/:/beegfs/" --cluster "sbatch -J {params.name} -p {params.partition} -N 1 --ntasks={params.ntasks} --mem={params.mem} -t {params.time} -o {params.out} -e {params.err}" --rerun-incomplete --rerun-triggers mtime -j 100 -n --forceall
+snakemake collect_everything --configfile config.json  --use-singularity --singularity-args "--bind /beegfs/:/beegfs/" --cluster "sbatch -J {params.name} -p {params.partition} -N 1 --ntasks={params.ntasks} --mem={params.mem} -t {params.time} -o {params.out} -e {params.err}" --rerun-incomplete --rerun-triggers mtime -j 100 -n --forceall
 ```
 
 To create a dag file :
 
 ``` bash
-snakemake collect_everything --configfile /beegfs/banque/gtdrift/pipeline/scripts/analyses/collecting_genome_annotation/config.json --forceall --dag | dot -Tpdf > dag-GTDrift.pdf
+snakemake collect_everything --configfile config.json --forceall --dag | dot -Tpdf > dag-GTDrift.pdf
 ```
