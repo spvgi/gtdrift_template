@@ -3,12 +3,14 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Reads hmm_search processed files and domains processed files and creates an overview table in the csv format')
 
+parser.add_argument('-i', '--input_dir', type=str, required=True, help='Input dir path')
 parser.add_argument('-a', '--accession', type=str, required=True, help='Organism genome NCBI accession number')
 parser.add_argument('-o', '--output', type=str, required=True, help='Processed file path')
 
 args = parser.parse_args()
 
 accession_number = args.accession
+input_dir = args.input_dir
 noms_colonnes = ['SeqID', 'SET Query', 'SET E-value', 'SET Score', 'Nb SET domains', 'SET domain start', 'SET domain end',
                 'KRAB Query', 'KRAB E-value', 'KRAB Score', 'Nb KRAB domains', 'KRAB domain start', 'KRAB domain end',
                 'SSXRD Query', 'SSXRD E-value', 'SSXRD Score', 'Nb SSXRD domains', 'SSXRD domain start', 'SSXRD domain end',
@@ -18,7 +20,7 @@ noms_colonnes = ['SeqID', 'SET Query', 'SET E-value', 'SET Score', 'Nb SET domai
 data_list = []
 
 # All candidates must have a SET domain
-with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession_number}/analyses/prdm9_prot/hmm_search/tbl/SET_processed") as reader:
+with open(f"{input_dir}/{accession_number}/analyses/prdm9_prot/hmm_search/tbl/SET_processed") as reader:
     for line in reader:
         line_data = line.strip().split('\t')
         to_add = {'SeqID': line_data[0], 'SET Query': line_data[2], 'SET E-value': line_data[7], 'SET Score': line_data[8]}
@@ -31,7 +33,7 @@ def processed_data(domain, accession_number=accession_number):
     '''
     Lit les fichiers résultat de hmm_search après mise en forme (1 fichier pour chaque domain protéique) et saisit les valeurs d'intérêt (E-value, Score) dans un data frame
     '''
-    with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession_number}/analyses/prdm9_prot/hmm_search/domtbl/{domain}_domains_processed") as reader:
+    with open(f"{input_dir}/{accession_number}/analyses/prdm9_prot/hmm_search/domtbl/{domain}_domains_processed") as reader:
         for line in reader.readlines():
             line_data = line.split('\t')
             seq_id = line_data[0]
@@ -45,7 +47,7 @@ def processed_domains(domain, accession_number=accession_number):
     '''
     Récupère les informations importantes (nombre de domaines identifiés, position) dans les fichiers résultat de hmm_search --domtblout et les saisit dans un dataframe
     '''
-    with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession_number}/analyses/prdm9_prot/hmm_search/domtbl/{domain}_domains_summary") as reader:
+    with open(f"{input_dir}/{accession_number}/analyses/prdm9_prot/hmm_search/domtbl/{domain}_domains_summary") as reader:
         for line in reader.readlines()[1:]:
             line_data = line.split('\t')
             nb_domains = line_data[9]
@@ -55,10 +57,8 @@ def processed_domains(domain, accession_number=accession_number):
                 summarised_data.loc[summarised_data['SeqID'] == seq_id, f"{domain} domain start"] = line_data[17]
                 summarised_data.loc[summarised_data['SeqID'] == seq_id, f"{domain} domain end"]= line_data[18]
 
-def getTaxid(accession_number=accession_number):
-    #df = pd.read_csv('/beegfs/banque/gtdrift/data/resources/organisms_data', sep='\t', header=0)
-    df = pd.read_csv('/beegfs/banque/gtdrift/data/ncbi_genome_assembly_taxon.txt', sep='\t', header=0)
-    #taxid = df.loc[df['Assembly Accession'] == accession_number, 'Taxid'].values[0]
+def getTaxid(accession_number=accession_number,input_dir=input_dir):
+    df = pd.read_csv(input_dir+'/../ncbi_genome_assembly_taxon.txt', sep='\t', header=0)
     taxid = df.loc[df['AssemblyAccession'] == accession_number, 'Taxid'].values[0]
     summarised_data["Taxid"] = taxid
 

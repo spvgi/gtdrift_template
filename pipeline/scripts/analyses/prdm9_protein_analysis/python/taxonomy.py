@@ -2,6 +2,16 @@ from ete3 import NCBITaxa
 import pandas as pd
 import os
 
+import argparse
+
+parser = argparse.ArgumentParser(description='Creates a complete taxonomy table using the ete3 python library')
+
+parser.add_argument('-i', '--input_dir', type=str, required=True, help='Input dir path')
+parser.add_argument('-o', '--output_dir', type=str, required=True, help='Output dir path')
+
+args = parser.parse_args()
+input_dir = args.input_dir
+output_dir = args.output_dir
 
 """
 This script creates a complete taxonomy table using the ete3 python library
@@ -12,12 +22,12 @@ def move_last_col(df):
     last_col = df.pop(last_col_name)
     df.insert(0, last_col_name, last_col)
 
-
-os.system("""awk '/^>/ {sub(">", "", $1); print $1}'  /beegfs/banque/gtdrift/data/analyses_summaries/BLASTP_results/blastp_summary.txt > /beegfs/banque/gtdrift/data/resources/taxid.txt""")
+print(f"Generate "+output_dir+"taxid.txt from "+output_dir+"analyses_summaries/BLASTP_results/blastp_summary.txt")
+os.system("awk '/^>/ {sub(\">\", \"\", $1); print $1}' "+ output_dir+"analyses_summaries/BLASTP_results/blastp_summary.txt >  "+output_dir+"taxid.txt")
 
 ncbi = NCBITaxa()
 
-with open('/beegfs/banque/gtdrift/data/resources/taxid.txt') as reader:
+with open(f'{output_dir}/taxid.txt') as reader:
     data_list = [elt for elt in reader.readlines()]
 
 tax_data = []
@@ -43,20 +53,17 @@ for index, row in sorted_tax.iterrows():
 
 move_last_col(sorted_tax)
 
-#with open('/beegfs/banque/gtdrift/data/resources/organisms_data') as reader:
-with open('/beegfs/banque/gtdrift/data/ncbi_genome_assembly_taxon.txt') as reader:
+with open(f'{input_dir}/ncbi_genome_assembly_taxon.txt') as reader:
     dico = {}
     for line in reader.readlines()[1:]:
         #taxid = int(line.split('\t')[1])
         taxid = int(line.split('\t')[6])
         assembly = line.split('\t')[2]
-        print("add taxid = "+str(taxid))
         dico[taxid] = assembly
 
 for index, row in sorted_tax.iterrows():
     taxid = row['Taxid']
-    print("taxid = "+str(taxid))
     sorted_tax.at[index, 'Accession'] = dico[taxid]
 
 move_last_col(sorted_tax)
-sorted_tax.to_csv('/beegfs/banque/gtdrift/data/resources/sorted_taxonomy.csv', sep = ';')
+sorted_tax.to_csv(f'{output_dir}/sorted_taxonomy.csv', sep = ';')

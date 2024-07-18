@@ -11,11 +11,12 @@ if the best match is PRDM9 and the ratio with the second best non-PRDM9 match.
 
 df = pd.read_csv(sys.argv[1], sep=';')
 accession = sys.argv[2]
-with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/blastp.txt", 'w') as writer:
+inputdir = sys.argv[3]
+with open(f"{inputdir}/{accession}/analyses/prdm9_prot/blastp.txt", 'w') as writer:
     taxid = None
     string = ''
-    os.system(f"mkdir -p /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences/")
-    os.system(f"mkdir -p /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_blastp/")
+    os.system(f"mkdir -p {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/")
+    os.system(f"mkdir -p {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/")
     for index, row in df.iterrows():
         taxid = f">{df['Taxid'].iloc[0]}\n"
         set = 0
@@ -31,16 +32,16 @@ with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prd
         if row['Nb ZF domains'] != 0:
             zf = row['Nb ZF domains']
         prot = f"<\t{set}\t{krab}\t{ssxrd}\t{zf}\n"
-        print(f"Run blastdbcmd -db /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa")
+        print(f"Run blastdbcmd -db {inputdir}/{accession}/analyses/prdm9_prot/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa")
         if int(row['SET domain end']) > int(row['SET domain start']) :
-            ret = os.system(f"blastdbcmd -db /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa")
+            ret = os.system(f"blastdbcmd -db {inputdir}/{accession}/analyses/prdm9_prot/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa")
             if ret > 0 :
                 sys.exit("Error during blastdbcmd")
-            print(f"Run blastp -db /beegfs/banque/gtdrift/data/files_for_analyses/PRDM_family_HUMAN/prdm_family -outfmt 7 -query /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
-            ret = os.system(f"blastp -db /beegfs/banque/gtdrift/data/files_for_analyses/PRDM_family_HUMAN/prdm_family -outfmt 7 -query /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out /beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
+            print(f"Run blastp -db  {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -outfmt 7 -query {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
+            ret = os.system(f"blastp -db {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -outfmt 7 -query  {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
             if ret > 0 :
                 sys.exit("Error during blastp")
-            with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}") as reader:
+            with open(f"{inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}") as reader:
                 prot_id = row['SeqID']
                 lines = reader.readlines()
                 prdm_match = lines[5].split()[1].split('_')[0]
@@ -56,7 +57,7 @@ with open(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prd
                     string += f"{prot}{prot_id}\t{prdm_match}\n"
         else :
             print(f"blastdbcmd was not processed")        
-    df.to_csv(f"/beegfs/banque/gtdrift/data/genome_assembly/{accession}/analyses/prdm9_prot/summary_table_{accession}.csv", sep=';')
+    df.to_csv(f"{inputdir}/{accession}/analyses/prdm9_prot/summary_table_{accession}.csv", sep=';')
     if taxid == None:
         print("Nothing found in blastp")
     else:

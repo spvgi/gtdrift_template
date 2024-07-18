@@ -2,6 +2,13 @@ from ete3 import NCBITaxa
 import pandas as pd
 import os
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Creates an output file named blastp_results.csv')
+parser.add_argument('-i', '--input_dir', type=str, required=True, help='Input dir path')
+args = parser.parse_args()
+input_dir = args.input_dir
+
 
 """
 This script creates an output file named blastp_results.csv. It is a tabular formating of the previously created blastp_summary.txt file. Those two outputs are created separately due to
@@ -11,7 +18,7 @@ snakemake iteration constraints, and optimisation constraints.
 ncbi = NCBITaxa()
 data = []
 
-with open('/beegfs/banque/gtdrift/data/analyses_summaries/BLASTP_results/blastp_summary.txt', 'r+') as reader:
+with open(f'{input_dir}analyses_summaries/BLASTP_results/blastp_summary.txt', 'r+') as reader:
     for line in reader.readlines():
         line = line.strip()
         # Get taxid and taxonomy data
@@ -64,7 +71,7 @@ output_df = output_df.loc[:, ~output_df.columns.str.contains('^Unnamed')]
 # taxonomy.rename(columns={'Species_name': 'Species_name2'}, inplace=True)
 
 # output_df = output_df.sort_values(by=['Superorder', 'Species_name']) 
-output_df.to_csv('/beegfs/banque/gtdrift/data/analyses_summaries/BLASTP_results/blastp_results.csv', sep=';')
+output_df.to_csv(f'{input_dir}/analyses_summaries/BLASTP_results/blastp_results.csv', sep=';')
 
 # os.system(f"mkdir -p test_seq_pour_align/")
 # for index, row in df_fusion.iterrows():
