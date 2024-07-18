@@ -1,8 +1,8 @@
 {
-  "pathGTDriftData": "/home/simon/Codes/gtdrift_template/data_results_per_assembly/",
-  "pathGTDriftGlobalResults": "/home/simon/Codes/gtdrift_template/global_results/",
-  "pathGTDriftResource": "/home/simon/Codes/gtdrift_template/pipeline/resources/",
-  "pathGTDriftScripts": "/home/simon/Codes/gtdrift_template/pipeline/scripts/",
-  "pathGTDriftComputEnv": "/home/simon/Codes/gtdrift_template/pipeline/computing_environments/",
-  "pathGTDriftLog": "/home/simon/Codes/gtdrift_template/temp/log/"
+  "pathGTDriftData": "/my_directory/gtdrift_template/data_results_per_assembly/",
+  "pathGTDriftGlobalResults": "/my_directory/gtdrift_template/global_results/",
+  "pathGTDriftResource": "/my_directory/gtdrift_template/pipeline/resources/",
+  "pathGTDriftScripts": "/my_directory/gtdrift_template/pipeline/scripts/",
+  "pathGTDriftComputEnv": "/my_directory/gtdrift_template/pipeline/computing_environments/",
+  "pathGTDriftLog": "/my_directory/gtdrift_template/temp/log/"
 }
