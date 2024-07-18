@@ -1,8 +1,8 @@
 {
-  "pathGTDriftData": "/home/penel/Codes/gtdrift_template/data_results_per_assembly/",
-  "pathGTDriftGlobalResults": "/home/penel/Codes/gtdrift_template/global_results/",
-  "pathGTDriftResource": "/home/penel/Codes/gtdrift_template/pipeline/resources/",
-  "pathGTDriftScripts": "/home/penel/Codes/gtdrift_template/pipeline/scripts/",
-  "pathGTDriftComputEnv": "/home/penel/Codes/gtdrift_template/pipeline/computing_environments/",
-  "pathGTDriftLog": "/home/penel/Codes/gtdrift_template/temp/log/"
+  "pathGTDriftData": "/home/simon/Codes/gtdrift_template/data_results_per_assembly/",
+  "pathGTDriftGlobalResults": "/home/simon/Codes/gtdrift_template/global_results/",
+  "pathGTDriftResource": "/home/simon/Codes/gtdrift_template/pipeline/resources/",
+  "pathGTDriftScripts": "/home/simon/Codes/gtdrift_template/pipeline/scripts/",
+  "pathGTDriftComputEnv": "/home/simon/Codes/gtdrift_template/pipeline/computing_environments/",
+  "pathGTDriftLog": "/home/simon/Codes/gtdrift_template/temp/log/"
 }
