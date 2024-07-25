@@ -24,7 +24,7 @@ echo "================ " >> missing_soft
 # Executables
 # ===========
 
-for soft in "esearch" "guix" "wget" "gzip" 
+for soft in "esearch" "gffread" "wget" "gzip" 
 do
 
 which $soft

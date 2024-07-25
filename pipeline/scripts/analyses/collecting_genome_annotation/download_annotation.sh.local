@@ -30,6 +30,6 @@ ln -s ${BASENAME}'_genomic.gff' ${gffOutput}
 
 #/beegfs/banque/gtdrift/pipeline/logiciels/cufflinks-2.2.1.Linux_x86_64/gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
 
-guix shell gffread -- gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
+gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
 
 ln -s ${BASENAME}'_genomic.gtf' ${gtfOutput}
