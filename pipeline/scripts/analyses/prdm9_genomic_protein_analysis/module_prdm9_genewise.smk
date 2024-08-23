@@ -48,7 +48,7 @@ rule get_blast_db_curated:
     output:
         expand("data/blastdb_protein_seq/{accession}/protdb.phr", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.pin", accession = CURATED),
-        expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
+        #expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psd", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psi", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psq", accession = CURATED)
@@ -60,7 +60,9 @@ rule get_blast_db_curated:
         for fasta in ${{array[@]}};
         do
             mkdir -p data/blastdb_protein_seq/"$fasta";
-            makeblastdb -in data/assemblies/"$fasta"/protein.faa -out data/blastdb_protein_seq/"$fasta"/protdb -dbtype prot -parse_seqids;
+            #makeblastdb -in data/assemblies/"$fasta"/protein.faa -out data/blastdb_protein_seq/"$fasta"/protdb -dbtype prot -parse_seqids;
+            formatdb -i data/assemblies/"$fasta"/protein.faa -n data/blastdb_protein_seq/"$fasta"/protdb -p T -o T;
+
         done
         """
 
@@ -90,7 +92,7 @@ rule get_blastp:
     input:
         expand("data/blastdb_protein_seq/{accession}/protdb.phr", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.pin", accession = CURATED),
-        expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
+        #expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psd", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psi", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psq", accession = CURATED),
@@ -154,7 +156,7 @@ rule extract_loci_curated:
     input:
         expand("data/blastdb_protein_seq/{accession}/protdb.phr", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.pin", accession = CURATED),
-        expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
+        #expand("data/blastdb_protein_seq/{accession}/protdb.pog", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psd", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psi", accession = CURATED),
         expand("data/blastdb_protein_seq/{accession}/protdb.psq", accession = CURATED),
@@ -381,13 +383,14 @@ rule get_protdb:
     output:
         phr="results/{accession}/Step3_genewise/protdb.phr",
         pin="results/{accession}/Step3_genewise/protdb.pin",
-        pog="results/{accession}/Step3_genewise/protdb.pog",
+        #pog="results/{accession}/Step3_genewise/protdb.pog",
         psq="results/{accession}/Step3_genewise/protdb.psq",
         psi="results/{accession}/Step3_genewise/protdb.psi",
         psd="results/{accession}/Step3_genewise/protdb.psd"
     shell:
         """
-        makeblastdb -in {input} -title protdb -out results/{wildcards.accession}/Step3_genewise/protdb -dbtype prot -parse_seqids
+        #makeblastdb -in {input} -title protdb -out results/{wildcards.accession}/Step3_genewise/protdb -dbtype prot -parse_seqids
+        formatdb -i {input} -t protdb -n results/{wildcards.accession}/Step3_genewise/protdb -p T -o T
         """
          
 rule hmm_build:
@@ -476,7 +479,7 @@ rule read_table:
         table="results/{accession}/Result_tables/parsed_summary_table_prdm9_{accession}.csv",
         phr="results/{accession}/Step3_genewise/protdb.phr",
         pin="results/{accession}/Step3_genewise/protdb.pin",
-        pog="results/{accession}/Step3_genewise/protdb.pog",
+        #pog="results/{accession}/Step3_genewise/protdb.pog",
         psq="results/{accession}/Step3_genewise/protdb.psq",
         psi="results/{accession}/Step3_genewise/protdb.psi",
         psd="results/{accession}/Step3_genewise/protdb.psd"
@@ -555,13 +558,14 @@ rule result_database:
     output:
         phr="results/{accession}/output_db/out_prot.phr",
         pin="results/{accession}/output_db/out_prot.pin",
-        pog="results/{accession}/output_db/out_prot.pog",
+        #pog="results/{accession}/output_db/out_prot.pog",
         psq="results/{accession}/output_db/out_prot.psq",
         psi="results/{accession}/output_db/out_prot.psi",
         psd="results/{accession}/output_db/out_prot.psd"
     shell:
         """
-        makeblastdb -in {input} -title out_prot -out results/{wildcards.accession}/output_db/out_prot -dbtype prot -parse_seqids
+        #makeblastdb -in {input} -title out_prot -out results/{wildcards.accession}/output_db/out_prot -dbtype prot -parse_seqids
+        formatdb -i {input} -t out_prot -n results/{wildcards.accession}/output_db/out_prot -p T -o T 
         """
 
 rule get_result_batch:
@@ -585,7 +589,7 @@ rule extract_proteins:
         batch="results/{accession}/predict_batch.txt",
         phr="results/blastdb_protein_seq/{accession}/protdb.phr",
         pin="results/blastdb_protein_seq/{accession}/protdb.pin",
-        pog="results/blastdb_protein_seq/{accession}/protdb.pog",
+        #pog="results/blastdb_protein_seq/{accession}/protdb.pog",
         psq="results/blastdb_protein_seq/{accession}/protdb.psq",
         psi="results/blastdb_protein_seq/{accession}/protdb.psi",
         psd="results/blastdb_protein_seq/{accession}/protdb.psd"
