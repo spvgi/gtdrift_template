@@ -28,10 +28,10 @@ rule all:
     """
     input:
         stats_prdm9 = expand("results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv", accession=ACCESSNB),
-        #krab = "summarized_results/krab_data.csv",
-        #krabzf = "summarized_results/krabzf_data.csv",
-        #zf = "summarized_results/zf_count.csv",
-        #table = "summarized_results/table_prdm9.csv",
+        krab = "summarized_results/krab_data.csv",
+        krabzf = "summarized_results/krabzf_data.csv",
+        zf = "summarized_results/zf_count.csv",
+        table = "summarized_results/table_prdm9.csv",
         ##hits = expand("results/{accession}/predicted_proteins/homologue_hits.faa", accession=ACCESSNB)
 
 #if CURATED != []:
