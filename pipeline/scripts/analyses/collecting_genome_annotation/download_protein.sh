@@ -17,12 +17,21 @@ fi
 
 PathLink=$(echo ${PathLink} | cut -d " " -f 1)
 
+echo "------------ ${PathLink} ------------"
+
 BASENAME=`basename ${PathLink}`
 
 Path=https${PathLink:3}/${BASENAME}'_protein.faa.gz'
 
+wget --spider ${Path}
+if [[ $? == 0 ]]; then
 wget ${Path} -O ${symlink_directory}${BASENAME}'_protein.faa.gz'
 gzip -d ${symlink_directory}${BASENAME}'_protein.faa.gz'
-
 cd ${symlink_directory}
 ln -s ${BASENAME}'_protein.faa' ${protOutput}
+else
+echo "There is no protein data "
+cd ${symlink_directory}
+echo "THERE_IS_NO_PROTEIN_DATA" >  ${protOutput}
+fi
+

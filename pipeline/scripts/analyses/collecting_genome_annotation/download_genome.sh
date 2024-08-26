@@ -17,6 +17,9 @@ fi
 
 PathLink=$(echo ${PathLink} | cut -d " " -f 1)
 
+echo "------------ ${PathLink} ------------"
+
+
 BASENAME=`basename ${PathLink}`
 
 Path=https${PathLink:3}/${BASENAME}'_genomic.fna.gz'

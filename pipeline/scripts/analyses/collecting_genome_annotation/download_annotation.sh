@@ -18,18 +18,32 @@ fi
 
 PathLink=$(echo ${PathLink} | cut -d " " -f 1)
 
+echo "------------ ${PathLink} ------------"
+
 BASENAME=`basename ${PathLink}`
 
 Path=https${PathLink:3}/${BASENAME}'_genomic.gff.gz'
 
+wget --spider ${Path}
+if [[ $? == 0 ]]; then
 wget ${Path} -O ${symlink_directory}${BASENAME}'_genomic.gff.gz'
 gzip -d ${symlink_directory}${BASENAME}'_genomic.gff.gz'
 
 cd ${symlink_directory}
 ln -s ${BASENAME}'_genomic.gff' ${gffOutput}
 
+
+
 #/beegfs/banque/gtdrift/pipeline/logiciels/cufflinks-2.2.1.Linux_x86_64/gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
 
 guix shell gffread -- gffread ${gffOutput} -T -o ${BASENAME}'_genomic.gtf'
 
 ln -s ${BASENAME}'_genomic.gtf' ${gtfOutput}
+
+
+else
+echo "There is no annotation"
+cd ${symlink_directory}
+echo "THERE_IS_NO_ANNOTATION" > ${gffOutput}
+echo "THERE_IS_NO_ANNOTATION" > ${gtfOutput}
+fi
