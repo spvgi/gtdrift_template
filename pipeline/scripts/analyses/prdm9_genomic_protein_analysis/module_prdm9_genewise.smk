@@ -71,7 +71,8 @@ rule get_tblastn:
     Run tblastn on database using refs.
     """
     input:
-        cds="data/ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/{exon}.fst",
+        #cds="data/ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/{exon}.fst",
+        cds=pathGTDriftResource+"ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/{exon}.fst",        
         nhr="data/blastdb_nucleotide_seq/{accession}/nucldb.nhr",
         nin="data/blastdb_nucleotide_seq/{accession}/nucldb.nin",
         #nog="data/blastdb_nucleotide_seq/{accession}/nucldb.nog",
@@ -108,7 +109,8 @@ rule get_blastp:
             elt=' ' read -r -a cds <<< "{EXON}";
             for exon in ${{cds[@]}};
             do
-                blastp -query data/ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/"$exon".fst -db data/blastdb_protein_seq/"$prot"/protdb -out results/"$prot"/Step1_blast/blastp/PRDM9_"$exon".blastp.fmt7 -evalue 1e-3 -max_target_seqs 500 -max_hsps 180 -outfmt "7 delim=  qseqid qlen sseqid slen pident nident length mismatch gapopen qstart qend sstart send bitscore evalue" -num_threads 4
+#                blastp -query data/ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/"$exon".fst -db data/blastdb_protein_seq/"$prot"/protdb -out results/"$prot"/Step1_blast/blastp/PRDM9_"$exon".blastp.fmt7 -evalue 1e-3 -max_target_seqs 500 -max_hsps 180 -outfmt "7 delim=  qseqid qlen sseqid slen pident nident length mismatch gapopen qstart qend sstart send bitscore evalue" -num_threads 4
+                blastp -query "+pathGTDriftResource+"/ref_align/Prdm9_Metazoa_Reference_alignment/exon_peptides/"$exon".fst -db data/blastdb_protein_seq/"$prot"/protdb -out results/"$prot"/Step1_blast/blastp/PRDM9_"$exon".blastp.fmt7 -evalue 1e-3 -max_target_seqs 500 -max_hsps 180 -outfmt "7 delim=  qseqid qlen sseqid slen pident nident length mismatch gapopen qstart qend sstart send bitscore evalue" -num_threads 4
             done;
         done
         """
@@ -260,7 +262,9 @@ rule genewisedb:
     """
     input:
         candidates=aggregate,
-        ref="data/ref_align/Prdm9_Metazoa_Reference_alignment/PRDM9_metazoa_ReferenceSequences.fa"
+ #       ref="data/ref_align/Prdm9_Metazoa_Reference_alignment/PRDM9_metazoa_ReferenceSequences.fa"
+        ref=pathGTDriftResource+"ref_align/Prdm9_Metazoa_Reference_alignment/PRDM9_metazoa_ReferenceSequences.fa"
+
     output:
         touch("genewisedb.{accession}.done")
     shell:
@@ -398,7 +402,8 @@ rule hmm_build:
     HMM creation.
     """
     input:
-        "data/ref_align/Prdm9_Metazoa_Reference_alignment/Domain_{domain}_ReferenceAlignment.fa"
+ #       "data/ref_align/Prdm9_Metazoa_Reference_alignment/Domain_{domain}_ReferenceAlignment.fa"
+        pathGTDriftResource+"ref_align/Prdm9_Metazoa_Reference_alignment/Domain_{domain}_ReferenceAlignment.fa"
     output:
         "data/hmm_build/{domain}.hmm"
     shell:
@@ -482,14 +487,14 @@ rule read_table:
         #pog="results/{accession}/Step3_genewise/protdb.pog",
         psq="results/{accession}/Step3_genewise/protdb.psq",
         psi="results/{accession}/Step3_genewise/protdb.psi",
-        psd="results/{accession}/Step3_genewise/protdb.psd"
-        
+        psd="results/{accession}/Step3_genewise/protdb.psd",
+        prdmfam=pathGTDriftResource+"PRDM_family_HUMAN"
     output:
         "results/{accession}/Step4_Hmm/blastp.txt",
         "results/{accession}/Result_tables/summary_table_{accession}.csv"
     shell:
         """
-        python3 python/blastp_analysis_genewise.py {input.table} {wildcards.accession}\
+        python3 python/blastp_analysis_genewise.py {input.table} {wildcards.accession} {input.prdmfam}\
         """
 
 rule summary:

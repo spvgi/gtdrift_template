@@ -11,7 +11,8 @@ if the best match is PRDM9 and the ratio with the second best non-PRDM9 match.
 
 df = pd.read_csv(sys.argv[1], sep=';')
 accession = sys.argv[2]
-
+prdmhumanfamily = sys.argv[3]
+print("PRDM FAMILY Path = "+prdmhumanfamily)
 with open(f"results/{accession}/Step4_Hmm/blastp.txt", 'w') as writer:
     taxid = None
     string = ''
@@ -37,8 +38,10 @@ with open(f"results/{accession}/Step4_Hmm/blastp.txt", 'w') as writer:
             ret = os.system(f"blastdbcmd -db results/{accession}/Step3_genewise/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa")
             if ret > 0 :
                 sys.exit("Error during blastdbcmd")
-            print(f"Run blastp -db data/PRDM_family_HUMAN/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
-            ret = os.system(f"blastp -db data/PRDM_family_HUMAN/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
+            #print(f"Run blastp -db data/PRDM_family_HUMAN/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
+            #ret = os.system(f"blastp -db data/PRDM_family_HUMAN/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
+            print(f"Run blastp -db {prdmhumanfamily}/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
+            ret = os.system(f"blastp -db {prdmhumanfamily}/prdm_family -outfmt 7 -query data/assemblies/{accession}/SET_sequences/{row['SeqID']}.fa -out data/assemblies/{accession}/SET_blastp/{row['SeqID']}")
             if ret > 0 :
                 sys.exit("Error during blastp")
             with open(f"data/assemblies/{accession}/SET_blastp/{row['SeqID']}") as reader:
