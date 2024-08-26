@@ -3,6 +3,14 @@ DOMAIN = ['KRAB', 'SET', 'SSXRD', 'ZF']
 EXON = ['CDS_exon2', 'CDS_exon3', 'CDS_exon4', 'CDS_exon5', 'CDS_exon6', 'CDS_exon7',
         'CDS_exon8', 'CDS_exon9', 'CDS_exon10', 'CDS_exon11']
 
+# Function to load JSON files
+def load_json(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+# Assign environment variables
+globals().update(load_json("../environment_path.json"))
+
 with open("data/resources/organisms_data") as reader:
     """
     Get the list of curated ones
@@ -28,10 +36,10 @@ rule all:
     """
     input:
         stats_prdm9 = expand("results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv", accession=ACCESSNB),
-        krab = "summarized_results/krab_data.csv",
-        krabzf = "summarized_results/krabzf_data.csv",
-        zf = "summarized_results/zf_count.csv",
-        table = "summarized_results/table_prdm9.csv",
+        krab = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krab_data.csv",
+        krabzf = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krabzf_data.csv",
+        zf = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/zf_count.csv",
+        table = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/table_prdm9.csv",
         ##hits = expand("results/{accession}/predicted_proteins/homologue_hits.faa", accession=ACCESSNB)
 
 #if CURATED != []:

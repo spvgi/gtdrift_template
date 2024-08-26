@@ -1,9 +1,13 @@
 import pandas as pd
+import json
 
 """
 This script creates a summary table of domain presence absence in candidate genes for every organism
 """
 
+with open('../environment_path.json') as f:
+    d = json.load(f)
+    
 taxonomy = pd.read_csv('data/resources/sorted_taxonomy.csv', sep= ';')
 taxonomy = taxonomy[['Taxid', 'Accession']]
 donnees = pd.read_csv("results/BLASTP_results/blastp_results.csv", sep=";")
@@ -84,4 +88,4 @@ merge = merge[['Taxid', 'Accession', 'Species_name', 'Status',
                'SET+KRAB+SSXRD nb', 'SET+KRAB+SSXRD', 'SET+KRAB+ZF nb', 'SET+KRAB+ZF', 'SET+KRAB nb', 'SET+KRAB',
                'SET+SSXRD+ZF nb', 'SET+SSXRD+ZF', 'SET+SSXRD nb', 'SET+SSXRD',
                'SSXRD+ZF nb', 'SSXRD+ZF', 'SET+ZF nb', 'SET+ZF']]
-merge.to_csv('summarized_results/table_prdm9.csv', sep = ';', index=False)
+merge.to_csv(d["pathGTDriftGlobalResults"]+'prdm9_genomic_protein_analysis/summarized_results/table_prdm9.csv', sep = ';', index=False)

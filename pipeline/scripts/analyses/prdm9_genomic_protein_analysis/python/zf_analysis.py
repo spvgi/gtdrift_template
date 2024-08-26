@@ -1,8 +1,12 @@
 import pandas as pd
 import os
+import json
 
 # This script is used to count the number of proteins with 5 or more Zinc finger domains for every organism
 
+with open('../environment_path.json') as f:
+    d = json.load(f)
+    
 accession = [elt for elt in os.listdir('results/') if elt.startswith('GC')]
 full_data = []
 
@@ -19,4 +23,4 @@ for accession_number in accession:
         full_data.append([accession_number, prot_count])
 
 zf_data = pd.DataFrame(full_data, columns=['Accession', '5+ ZF'])
-zf_data.to_csv('summarized_results/zf_count.csv', sep = ';', index= False)
+zf_data.to_csv(d["pathGTDriftGlobalResults"]+'prdm9_genomic_protein_analysis/summarized_results/zf_count.csv', sep = ';', index= False)

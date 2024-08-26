@@ -542,10 +542,10 @@ rule create_table:
         "results/BLASTP_results/blastp_results.csv",
         "data/resources/sorted_taxonomy.csv"
     output:
-        "summarized_results/krab_data.csv",
-        "summarized_results/krabzf_data.csv",
-        "summarized_results/zf_count.csv",
-        "summarized_results/table_prdm9.csv"
+        pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krab_data.csv",
+        pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krabzf_data.csv",
+        pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/zf_count.csv",
+        pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/table_prdm9.csv"
     shell:
         """
         python3 python/krab.py\

@@ -1,11 +1,17 @@
 import pandas as pd
 import os
+import json
 
 # This script creates a dataframe with the list of proteins presenting a KRAB domain for every organism
 
 accession = [elt for elt in os.listdir('results/') if elt.startswith('GC')]
 full_data = []
 
+with open('../environment_path.json') as f:
+    d = json.load(f)
+
+
+        
 for accession_number in accession:
     with open(f"results/{accession_number}/Step4_Hmm/tbl/KRAB_processed") as reader:
         prot_list = []
@@ -16,4 +22,4 @@ for accession_number in accession:
         full_data.append([accession_number, prot_list, len(prot_list)])
 
 zf_data = pd.DataFrame(full_data, columns=['Accession', 'Protein List', 'KRAB nb'])
-zf_data.to_csv('summarized_results/krab_data.csv', sep = ';', index= False)
+zf_data.to_csv(d["pathGTDriftGlobalResults"]+'prdm9_genomic_protein_analysis/summarized_results/krab_data.csv', sep = ';', index= False)

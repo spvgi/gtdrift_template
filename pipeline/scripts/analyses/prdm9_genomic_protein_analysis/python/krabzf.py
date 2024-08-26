@@ -1,13 +1,17 @@
 import pandas as pd
 import os
+import json
 
 # This script takes the previously created krab_data dataframe, that contains the list of every protein presenting a krab domain for every organism,
 # and checks for every entries in all of the lists whether these proteins also carry a zinc finger domain or not.
 
+with open('../environment_path.json') as f:
+    d = json.load(f)
+    
 accession = [elt for elt in os.listdir('results/') if elt.startswith('GC')]
 full_data = []
 
-krab_data = pd.read_csv('summarized_results/krab_data.csv', sep=';')
+krab_data = pd.read_csv(d["pathGTDriftGlobalResults"]+'prdm9_genomic_protein_analysis/summarized_results/krab_data.csv', sep=';')
 for accession_number in accession:
     with open(f"results/{accession_number}/Step4_Hmm/tbl/ZF_processed") as reader:
         prot_list = []
@@ -18,4 +22,4 @@ for accession_number in accession:
         full_data.append([accession_number, prot_list, len(prot_list)])
 
 zf_data = pd.DataFrame(full_data, columns=['Accession', 'KRAB+ZF protein list', 'KRAB+ZF nb'])
-zf_data.to_csv('summarized_results/krabzf_data.csv', sep= ';', index = False)
+zf_data.to_csv(d["pathGTDriftGlobalResults"]+'prdm9_genomic_protein_analysis/summarized_results/krabzf_data.csv', sep= ';', index = False)
