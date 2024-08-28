@@ -298,7 +298,7 @@ rule concatenate_candidates:
         cd results/{wildcards.accession}/Step3_genewise;
         cat *.gw > gw.concat;
         cd ../../..;
-        rm genewisedb.{wildcards.accession}.done
+        #rm genewisedb.{wildcards.accession}.done
         """
 
 rule genewise_parser:
