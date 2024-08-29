@@ -35,12 +35,29 @@ rule all:
     Get the prdm9 stats
     """
     input:
-        stats_prdm9 = expand("results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv", accession=ACCESSNB),
+        stats_prdm9 = expand(pathGTDriftData+ "genome_assembly/{accession}/analyses/prdm9_genomic_protein/summary_table_prdm9_{accession}.csv", accession=ACCESSNB),
         krab = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krab_data.csv",
         krabzf = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/krabzf_data.csv",
         zf = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/zf_count.csv",
         table = pathGTDriftGlobalResults+"prdm9_genomic_protein_analysis/summarized_results/table_prdm9.csv",
         ##hits = expand("results/{accession}/predicted_proteins/homologue_hits.faa", accession=ACCESSNB)
+
+rule copy_results:
+    """
+    Copy results
+    """
+    input:
+        #expand("results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv", accession=ACCESSNB),
+        "results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv"
+    output:
+        pathGTDriftData+ "genome_assembly/{accession}/analyses/prdm9_genomic_protein/summary_table_prdm9_{accession}.csv"
+
+    shell:
+        """
+        echo copy  {input} into {output};
+        cp {input} {output};
+        """
+ 
 
 #if CURATED != []:
 #        include: "module_get_faa.smk"
