@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-
+pd.options.mode.copy_on_write = True
 """
 This script creates a summary table of domain presence absence in candidate genes for every organism
 """
