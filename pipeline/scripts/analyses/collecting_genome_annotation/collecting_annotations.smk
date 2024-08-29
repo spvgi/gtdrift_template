@@ -19,10 +19,11 @@ if "assembly_list" in config.keys():
 else:
     assembly_list = None
 
+storage  = config["storage"]
 
 rule collect_everything:
      input:
-         expand( pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna",genome_assembly=assembly_list),
+         expand( pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna.path",genome_assembly=assembly_list),
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/protein.faa",genome_assembly=assembly_list),
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/cds_from_genomic.fna",genome_assembly=assembly_list),
          expand( pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/genomic.gff",genome_assembly=assembly_list)
@@ -34,9 +35,9 @@ rule download_NCBI_genome:
     params:
         symlink_directory = pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/"
     output:
-        genome_path = pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna"
+        genome_path = pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna.path"
     shell:
-        "{pathGTDriftScripts}analyses/collecting_genome_annotation/download_genome.sh {wildcards.genome_assembly} {output.genome_path} {params.symlink_directory}"
+        "{pathGTDriftScripts}analyses/collecting_genome_annotation/download_genome.sh {wildcards.genome_assembly} {output.genome_path} {params.symlink_directory} {storage}"
 
 
 # Ne se lance que sur un noeud (-j = 1) sinon bug

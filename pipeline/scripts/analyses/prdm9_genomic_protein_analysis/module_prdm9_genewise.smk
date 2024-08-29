@@ -4,7 +4,8 @@ if config["mode"] == "guix":
     RUNCMD="guix shell hmmer -- "
 else:
     RUNCMD=""
-
+    
+storage  = config["storage"]
 #MINI = config["mini"]
 
 
@@ -20,6 +21,29 @@ def load_json(file_path):
 
 # Assign environment variables
 globals().update(load_json("../environment_path.json"))
+
+
+rule get_genome_seq_fasta:
+    input:
+        fasta = pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna.path"
+    output:
+        fasta = temp(pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna")
+    shell:
+        """
+        export  genomic=`cat {input.fasta}`
+        echo "Genome sequence fasta file : $genomic"
+        if [ {storage} == irods ];
+            then
+            echo "iget  /lbbeZone/home/penel/gtdrift/genome_seq/$genomic"
+            ls {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/"
+            iget -f /lbbeZone/home/penel/gtdrift/genome_seq/$genomic {output.fasta}
+#            iget -f /lbbeZone/home/penel/gtdrift/genome_seq/$genomic {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/$genomic"
+#            echo ln -s {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/$genomic {output.fasta}"
+#            ln -s {pathGTDriftData}genome_assembly/{wildcards.accession}/genome_seq/$genomic {output.fasta}
+        else
+            ln -s {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/$genomic {output.fasta}"
+        fi    
+        """
 
 rule get_blast_db:
     """
