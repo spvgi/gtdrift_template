@@ -53,12 +53,12 @@ rule get_blast_db:
  #       fasta="data/assemblies/{accession}/genomic.fna"
         fasta = pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna"
     output:
-        "data/blastdb_nucleotide_seq/{accession}/nucldb.nhr",
-        "data/blastdb_nucleotide_seq/{accession}/nucldb.nin",
-        #"data/blastdb_nucleotide_seq/{accession}/nucldb.nog",
-        "data/blastdb_nucleotide_seq/{accession}/nucldb.nsd",
-        "data/blastdb_nucleotide_seq/{accession}/nucldb.nsi",
-        "data/blastdb_nucleotide_seq/{accession}/nucldb.nsq"
+        temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nhr"),
+        temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nin"),
+        #"data/blastdb_nucleotide_seq/{accession}/nucldb.nog"),
+        temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nsd"),
+        temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nsi"),
+        temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nsq")
     shell:
         """
         #makeblastdb -in {input} -out data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -dbtype nucl -parse_seqids
