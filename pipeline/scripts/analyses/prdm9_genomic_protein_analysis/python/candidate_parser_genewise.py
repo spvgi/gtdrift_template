@@ -2,6 +2,7 @@ import pandas as pd
 import argparse
 from math import isnan
 
+pd.options.mode.copy_on_write = True
 parser = argparse.ArgumentParser(description='Reads overview table in the csv format and returns best candidates for each locus')
 
 parser.add_argument('-i', '--input', type=str, required=True, help='Overview table for prdm9')
