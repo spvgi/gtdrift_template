@@ -483,7 +483,7 @@ rule table_editing:
         domain_done,
         err = error_check
     output:
-        "results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv"
+        temp("results/{accession}/Result_tables/summary_table_prdm9_{accession}.csv")
     shell:
         "python3 python/table_builder_genewise.py -a {wildcards.accession} -e {input.err} -o {output}"
 
