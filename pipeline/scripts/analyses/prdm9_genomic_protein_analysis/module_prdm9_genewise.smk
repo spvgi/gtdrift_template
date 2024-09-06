@@ -61,8 +61,8 @@ rule get_blast_db:
         temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nsq")
     shell:
         """
-        #makeblastdb -in {input} -out data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -dbtype nucl -parse_seqids
-        formatdb -i {input} -n data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -p F -o T
+        makeblastdb -in {input} -out data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -dbtype nucl -parse_seqids
+        #formatdb -i {input} -n data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -p F -o T
         """
 
 rule get_blast_db_curated:
@@ -84,8 +84,8 @@ rule get_blast_db_curated:
         for fasta in ${{array[@]}};
         do
             mkdir -p data/blastdb_protein_seq/"$fasta";
-            #makeblastdb -in data/assemblies/"$fasta"/protein.faa -out data/blastdb_protein_seq/"$fasta"/protdb -dbtype prot -parse_seqids;
-            formatdb -i data/assemblies/"$fasta"/protein.faa -n data/blastdb_protein_seq/"$fasta"/protdb -p T -o T;
+            makeblastdb -in data/assemblies/"$fasta"/protein.faa -out data/blastdb_protein_seq/"$fasta"/protdb -dbtype prot -parse_seqids;
+            #formatdb -i data/assemblies/"$fasta"/protein.faa -n data/blastdb_protein_seq/"$fasta"/protdb -p T -o T;
 
         done
         """
@@ -417,8 +417,8 @@ rule get_protdb:
         psd="results/{accession}/Step3_genewise/protdb.psd"
     shell:
         """
-        #makeblastdb -in {input} -title protdb -out results/{wildcards.accession}/Step3_genewise/protdb -dbtype prot -parse_seqids
-        formatdb -i {input} -t protdb -n results/{wildcards.accession}/Step3_genewise/protdb -p T -o T
+        makeblastdb -in {input} -title protdb -out results/{wildcards.accession}/Step3_genewise/protdb -dbtype prot -parse_seqids
+        #formatdb -i {input} -t protdb -n results/{wildcards.accession}/Step3_genewise/protdb -p T -o T
         """
          
 rule hmm_build:
@@ -593,8 +593,8 @@ rule result_database:
         psd="results/{accession}/output_db/out_prot.psd"
     shell:
         """
-        #makeblastdb -in {input} -title out_prot -out results/{wildcards.accession}/output_db/out_prot -dbtype prot -parse_seqids
-        formatdb -i {input} -t out_prot -n results/{wildcards.accession}/output_db/out_prot -p T -o T 
+        makeblastdb -in {input} -title out_prot -out results/{wildcards.accession}/output_db/out_prot -dbtype prot -parse_seqids
+        #formatdb -i {input} -t out_prot -n results/{wildcards.accession}/output_db/out_prot -p T -o T 
         """
 
 rule get_result_batch:
