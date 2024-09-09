@@ -44,6 +44,18 @@ rule get_genome_seq_fasta:
             ln -s {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/$genomic {output.fasta}"
         fi    
         """
+rule filter_genomic:
+   """
+    Filter genomic sequences.
+    """
+    input:
+        pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna"
+    output:    
+        temp(pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.ans")
+    shell:
+        """
+        dustmasker  -in {input} -out {output} -parse_seqids -outfmt maskinfo_asn1_bin
+        """
 
 rule get_blast_db:
     """
@@ -51,7 +63,8 @@ rule get_blast_db:
     """
     input:
  #       fasta="data/assemblies/{accession}/genomic.fna"
-        fasta = pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna"
+        fasta = pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.fna",
+        filter = pathGTDriftData+ "genome_assembly/{accession}/genome_seq/genomic.ans"
     output:
         temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nhr"),
         temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nin"),
@@ -61,7 +74,7 @@ rule get_blast_db:
         temp("data/blastdb_nucleotide_seq/{accession}/nucldb.nsq")
     shell:
         """
-        makeblastdb -in {input} -out data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -dbtype nucl -parse_seqids
+        makeblastdb -in {input.fasta} -mask_data {input.filter} -out data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -dbtype nucl -parse_seqids
         #formatdb -i {input} -n data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -p F -o T
         """
 
@@ -107,7 +120,7 @@ rule get_tblastn:
         "results/{accession}/Step1_blast/tblastn/PRDM9_{exon}.tblastn.fmt7"
     shell:
         """
-        tblastn -query {input.cds} -db data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -out {output} -evalue 1e-3 -max_target_seqs 500 -max_hsps 180 -outfmt "7 delim=  qseqid qlen sseqid slen pident nident length mismatch gapopen qstart qend sstart send bitscore evalue" -num_threads 4
+        tblastn  -db_soft_mask 11 -query {input.cds} -db data/blastdb_nucleotide_seq/{wildcards.accession}/nucldb -out {output} -evalue 1e-3 -max_target_seqs 500 -max_hsps 180 -outfmt "7 delim=  qseqid qlen sseqid slen pident nident length mismatch gapopen qstart qend sstart send bitscore evalue" -num_threads 4
         """
 
 rule get_blastp:
