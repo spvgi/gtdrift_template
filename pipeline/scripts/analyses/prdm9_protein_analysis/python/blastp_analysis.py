@@ -12,6 +12,13 @@ if the best match is PRDM9 and the ratio with the second best non-PRDM9 match.
 df = pd.read_csv(sys.argv[1], sep=';')
 accession = sys.argv[2]
 inputdir = sys.argv[3]
+
+                
+print(f"Run formatdb -i {inputdir}../../pipeline/resources/PRDM_family_HUMAN/PRDM_family_HUMAN.fa -t protdb -n {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -p T -o T")            
+ret = os.system(f"formatdb -i {inputdir}../../pipeline/resources/PRDM_family_HUMAN/PRDM_family_HUMAN.fa -t protdb -n {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -p T -o T")
+if ret > 0 :
+    sys.exit("Error during formatdb")  
+                
 with open(f"{inputdir}/{accession}/analyses/prdm9_prot/blastp.txt", 'w') as writer:
     taxid = None
     string = ''
@@ -37,7 +44,12 @@ with open(f"{inputdir}/{accession}/analyses/prdm9_prot/blastp.txt", 'w') as writ
             ret = os.system(f"blastdbcmd -db {inputdir}/{accession}/analyses/prdm9_prot/protdb -entry {row['SeqID']} -range {int(row['SET domain start'])}-{int(row['SET domain end'])} -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa")
             if ret > 0 :
                 sys.exit("Error during blastdbcmd")
-            print(f"Run blastp -db  {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -outfmt 7 -query {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
+                
+            #print(f"Run formatdb -i {inputdir}../../pipeline/resources/PRDM_family_HUMAN/PRDM_family_HUMAN.fa -t protdb -n {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -p T -o T"")            
+            #ret = os.system(f"formatdb -i {inputdir}../../pipeline/resources/PRDM_family_HUMAN/PRDM_family_HUMAN.fa -t protdb -n {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -p T -o T")
+            #if ret > 0 :
+            #    sys.exit("Error during formatdb")            
+            
             ret = os.system(f"blastp -db {inputdir}../../pipeline/resources/PRDM_family_HUMAN/prdm_family -outfmt 7 -query  {inputdir}/{accession}/analyses/prdm9_prot/SET_sequences/{row['SeqID']}.fa -out  {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
             if ret > 0 :
                 sys.exit("Error during blastp")
