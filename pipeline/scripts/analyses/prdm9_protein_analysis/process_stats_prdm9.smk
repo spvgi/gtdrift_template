@@ -24,6 +24,8 @@ rule all:
         krab = pathGTDriftGlobalResults +"analyses_summaries/table_results/krab_data.csv",
         krabzf = pathGTDriftGlobalResults + "analyses_summaries/table_results/krabzf_data.csv",
         zf = pathGTDriftGlobalResults + "analyses_summaries/table_results/zf_count.csv",
-        table = pathGTDriftGlobalResults + "analyses_summaries/table_results/table_prdm9.csv"
+        table = pathGTDriftGlobalResults + "analyses_summaries/table_results/table_prdm9.csv",
+        zincfinger = pathGTDriftGlobalResults + "analyses_summaries/table_results/zinc_finger.csv"
 
 include: "module_stats_prdm9.smk"
+include: "module_stats_zincfinger.smk"

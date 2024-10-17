@@ -24,7 +24,7 @@ echo "================ " >> missing_soft
 # Executables
 # ===========
 
-for soft in "guix"  "formatdb" "blastp" "python3" "pip3" "bidon"
+for soft in "guix"  "formatdb" "blastp" "python3" "pip3" "bidon" "seqkit" "Rscript" "R"
 do
 
 which $soft
@@ -73,9 +73,24 @@ echo $module >> missing_soft
 fi
 done
 
+#module R
+#biocmanager
+#BiocManager::install("Biostrings")
 
-
-
+for module in  "Biostrings"
+do
+echo test module $module
+ Rscript -e  "library($module)"
+status=$?
+echo "Module $module : $status"
+if  [ $status -eq 0 ]
+then
+echo "Ok"
+else
+echo "Error, module $module is missing"
+echo $module >> missing_soft 
+fi
+done
 
 
  
