@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import json
 
+
 configfile:"config.json"
 
 # Function to load JSON files
@@ -19,7 +20,7 @@ if "assembly_list" in config.keys():
 else:
     assembly_list = None
 
-storage  = config["storage"]
+storagetype  = config["storagetype"]
 
 rule collect_everything:
      input:
@@ -37,7 +38,7 @@ rule download_NCBI_genome:
     output:
         genome_path = pathGTDriftData + "genome_assembly/{genome_assembly}/genome_seq/genomic.fna.path"
     shell:
-        "{pathGTDriftScripts}analyses/collecting_genome_annotation/download_genome.sh {wildcards.genome_assembly} {output.genome_path} {params.symlink_directory} {storage}"
+        "{pathGTDriftScripts}analyses/collecting_genome_annotation/download_genome.sh {wildcards.genome_assembly} {output.genome_path} {params.symlink_directory} {storagetype}"
 
 
 # Ne se lance que sur un noeud (-j = 1) sinon bug
@@ -72,3 +73,5 @@ rule download_NCBI_annotation:
         gtf_path = pathGTDriftData + "genome_assembly/{genome_assembly}/annotation/genomic.gtf"
     shell:
         "{pathGTDriftScripts}analyses/collecting_genome_annotation/download_annotation.sh {wildcards.genome_assembly} {output.gff_path} {output.gtf_path} {params.symlink_directory}"
+
+
