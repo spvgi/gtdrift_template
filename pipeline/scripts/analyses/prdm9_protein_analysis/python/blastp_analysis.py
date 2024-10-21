@@ -63,8 +63,11 @@ with open(f"{inputdir}/{accession}/analyses/prdm9_prot/blastp.txt", 'w') as writ
                     j = 1
                     while lines[5 + j].split()[1].split('_')[0] == 'PRDM9': 
                         j += 1
-                    df.at[index, 'Score ratio'] = float(lines[5].split()[-1])/float(lines[5 + j].split()[-1])
-                    string += f"{prot}{prot_id}\t{float(lines[5].split()[-1])}\t{float(lines[5].split()[-1])/float(lines[5 + j].split()[-1])}\t{prdm_match}\n"
+                    if lines[5 + j].split(" ")[0] != "#":
+                    	df.at[index, 'Score ratio'] = float(lines[5].split()[-1])/float(lines[5 + j].split()[-1])
+                    	string += f"{prot}{prot_id}\t{float(lines[5].split()[-1])}\t{float(lines[5].split()[-1])/float(lines[5 + j].split()[-1])}\t{prdm_match}\n"
+                    else:
+                    	print(f"Only 1 hit for {inputdir}/{accession}/analyses/prdm9_prot/SET_blastp/{row['SeqID']}")
                 else:
                     string += f"{prot}{prot_id}\t{prdm_match}\n"
         else :
