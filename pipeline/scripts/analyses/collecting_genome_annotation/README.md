@@ -7,6 +7,11 @@ Une commande pour lancer ce pipeline :
 ``` bash
 snakemake collect_everything --configfile config.json  --cores 1
 ```
+Une commande pour lancer ce pipeline avec un fichier de conf génére par ./prdm9_genomic_protein_analysis/generate_conf_for_collecting_genome_annotation.py 
+
+``` bash
+snakemake collect_everything --configfile config_prdm9_genomic.json  --cores 1
+```
 
 Un autre commande avec singularity
 

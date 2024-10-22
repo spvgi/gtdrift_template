@@ -3,7 +3,7 @@ import os
 import json
 
 
-configfile:"config.json"
+#configfile:"config.json"
 
 # Function to load JSON files
 def load_json(file_path):
