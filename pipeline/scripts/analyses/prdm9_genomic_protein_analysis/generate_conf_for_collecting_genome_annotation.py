@@ -18,7 +18,6 @@ with open(sys.argv[1]) as reader:
                 UNCURATED.append(line_data[2])
                 ALL.append(line_data[2])
 
-print(ALL)
 writer = open(sys.argv[2], 'w')
 writer.write("{\n\
     \"storagetype\": \"irods\",\n\
@@ -26,5 +25,16 @@ writer.write("{\n\
 ac=ALL[0]
 writer.write("\""+ac+"\"")   
 for ac in ALL[1:]:
+    writer.write(",\n\""+ac+"\"")
+writer.write("\n]\n}\n")
+writer.close()
+
+writer = open("curated_only_"+sys.argv[2], 'w')
+writer.write("{\n\
+    \"storagetype\": \"irods\",\n\
+    \"assembly_list\": [\n")
+ac=CURATED[0]
+writer.write("\""+ac+"\"")   
+for ac in CURATED[1:]:
     writer.write(",\n\""+ac+"\"")
 writer.write("\n]\n}\n")
