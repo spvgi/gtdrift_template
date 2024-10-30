@@ -5,7 +5,7 @@ if config["mode"] == "guix":
 else:
     RUNCMD=""
     
-storage  = config["storage"]
+storagetype  = config["storagetype"]
 #MINI = config["mini"]
 
 
@@ -32,7 +32,7 @@ rule get_genome_seq_fasta:
         """
         export  genomic=`cat {input.fasta}`
         echo "Genome sequence fasta file : $genomic"
-        if [ {storage} == irods ];
+        if [ {storagetype} == irods ];
             then
             echo "iget  /lbbeZone/home/penel/gtdrift/genome_seq/$genomic"
             ls {pathGTDriftData}"genome_assembly/{wildcards.accession}/genome_seq/"
