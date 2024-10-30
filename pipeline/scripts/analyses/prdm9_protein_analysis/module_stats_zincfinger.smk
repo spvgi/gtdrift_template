@@ -12,19 +12,30 @@ def load_json(file_path):
 # Assign environment variables
 globals().update(load_json("../environment_path.json"))
 
+
 rule generate_prdm9_candidates:
     input:
-        prdm9_prot_dir = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/SET_sequences"
+        prdm9_prot_summary = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/summary_table_{accession}.csv",
     output:
-        candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.txt"
+        candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.csv"
     shell:
         """
-        ls {input.prdm9_prot_dir} | sed 's/\.[^.]*$//' > {output.candidate_list}
+        python3 python/generate_PRDM9_candidates.py {input.prdm9_prot_summary} {output}
+        """
+
+rule generate_prdm9_candidates_IDs:
+    input:
+        prdm9_prot_dir = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.csv"
+    output:
+        candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates_ID.txt"
+    shell:
+        """
+        python3 python/extract_PRDM9_candidates_ID.py {input} {output}
         """
 
 rule run_seqkit_extract:
     input:
-        candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.txt",
+        candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates_ID.txt",
         multifasta = pathGTDriftData + "genome_assembly/{accession}/annotation/protein.faa"
     output:
         fasta_output = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/candidates_prdm9.fasta"
@@ -70,3 +81,18 @@ rule combine_zinc_finger:
                 with open(fname) as infile:
                     outfile.write(infile.read())
                     outfile.write("\n")  # Add a newline between files
+
+rule general_table:
+    """
+    Generate a general table of PRDM9 candidates
+    """
+    input:
+        prdm9_prot_files = expand(pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.csv", accession=ACCESSNB)
+    output:
+        general_table = pathGTDriftGlobalResults + "analyses_summaries/table_results/table_prdm9.csv"
+    run:
+        # Merge the files
+        input_files = ",".join(input.prdm9_prot_files)
+        shell(
+            f"python3 python/general_table_prdm9.py -i \"{input_files}\" -o {output.general_table}"
+        )
