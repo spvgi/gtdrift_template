@@ -36,3 +36,4 @@ snakemake -s process_stats_prdm9.smk --cores 1
 ```
 Tester la config necessaire: dans chaque repertoire  de "analyses" le script "testconf.sh" permet de tester si les programmes, utilitaires  et modules  nécessaires sont installés. 
 
+
