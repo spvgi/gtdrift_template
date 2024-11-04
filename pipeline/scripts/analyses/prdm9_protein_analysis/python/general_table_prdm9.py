@@ -28,8 +28,8 @@ data.columns = data.columns.str.strip()
 # Initialize the list for the output DataFrame
 summary_data = []
 
-# Group by Species_name, taxid, and Assembly
-grouped = data.groupby(['species_name', 'taxid', 'Assembly'])
+# Group by Species_name and taxid (one row per species)
+grouped = data.groupby(['species_name', 'taxid'])
 
 # Iterate over each group
 for name, group in grouped:
@@ -73,7 +73,6 @@ for name, group in grouped:
     summary_data.append({
         'Species_name': name[0],
         'taxid': name[1],
-        'Assembly': name[2],
         'KXSZ nb': len(kxsz_proteins_list),
         'KXSZ list': ', '.join(kxsz_proteins_list),
         'KXS nb': len(kxs_proteins_list),
@@ -89,4 +88,3 @@ summary_df = pd.DataFrame(summary_data)
 # Save to CSV
 summary_df.to_csv(output_dir, sep=';', index=False)
 print(f"Output saved to {output_dir}")
-
