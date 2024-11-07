@@ -17,11 +17,12 @@ globals().update(load_json("../environment_path.json"))
 rule generate_prdm9_candidates:
     input:
         prdm9_prot_summary = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/summary_table_{accession}.csv",
+        assembly_info_file = pathGTDriftData + "organisms_data.metazoa"
     output:
         candidate_list = pathGTDriftData + "genome_assembly/{accession}/analyses/prdm9_prot/prdm9_candidates.csv"
     shell:
         """
-        python3 python/generate_PRDM9_candidates.py {input.prdm9_prot_summary} {output}
+        python3 python/generate_PRDM9_candidates.py {input.prdm9_prot_summary} {input.assembly_info_file} {output}
         """
 
 rule merge_prdm9_candidates:
