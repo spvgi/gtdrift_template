@@ -66,20 +66,22 @@ for name, group in grouped:
         elif sorted_domains == ['K', 'X', 'S']:
             kxs_proteins_list.append(row['SeqID'])
         else:
-            other_proteins_list.append(row['SeqID'])
-            other_domain_content.append(''.join(sorted_domains))
+            # Add to 'Other' category only if SeqID is not NaN and there are valid domains
+            if pd.notna(row['SeqID']) and (len(sorted_domains) > 0):
+                other_proteins_list.append(str(row['SeqID']))
+                other_domain_content.append(''.join(sorted_domains))
 
-    # Add classification results to the summary
+    # Handle the case where no 'Other' proteins were found
     summary_data.append({
         'Species_name': name[0],
         'taxid': name[1],
         'KXSZ nb': len(kxsz_proteins_list),
-        'KXSZ list': ', '.join(kxsz_proteins_list),
+        'KXSZ list': ', '.join(kxsz_proteins_list) if len(kxsz_proteins_list) > 0 else '',
         'KXS nb': len(kxs_proteins_list),
-        'KXS list': ', '.join(kxs_proteins_list),
-        'Other nb': len(other_proteins_list),
-        'Other list': ', '.join(other_proteins_list),
-        'Other domain content': ', '.join(other_domain_content)
+        'KXS list': ', '.join(kxs_proteins_list) if len(kxs_proteins_list) > 0 else '',
+        'Other nb': len(other_proteins_list) if len(other_proteins_list) > 0 else 0,  # Assign 0 if no 'Other' proteins
+        'Other list': ', '.join(other_proteins_list) if len(other_proteins_list) > 0 else '',  # Leave empty if no 'Other' proteins
+        'Other domain content': ', '.join(other_domain_content) if len(other_domain_content) > 0 else ''  # Leave empty if no 'Other' domains
     })
 
 # Convert summary_data to DataFrame
